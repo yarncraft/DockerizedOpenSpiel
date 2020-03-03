@@ -10,7 +10,13 @@ git clone https://github.com/yarncraft/DockerizedOpenSpiel.git
 cd DockerizedOpenSpiel
 
 docker build -t openspiel .
-docker run openspiel examples/example --game=tic_tac_toe
+docker run openspiel build/examples/example --game=tic_tac_toe
+```
+
+## Running Python scripts
+
+```bash
+docker run openspiel python3 python/examples/matrix_game_example.py
 ```
 
 ## Acknowledgements

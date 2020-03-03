@@ -1,7 +1,7 @@
 # DockerizedOpenSpiel
-A dockerfile template containing the OpenSpiel RL environment.
+_A dockerfile template containing the OpenSpiel RL environment._
 
-<img src="https://images.unsplash.com/photo-1501003878151-d3cb87799705?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80" height="300" />
+<img src="https://images.unsplash.com/photo-1501003878151-d3cb87799705?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80" height="200" align="right"/>
 
 ## Installation 
 
@@ -14,4 +14,4 @@ docker run openspiel examples/example --game=tic_tac_toe
 ```
 
 ## Acknowledgements
-Special thanks to Edward Lockhart https://github.com/elkhrt for helping out!
+_Special thanks to Edward Lockhart https://github.com/elkhrt for helping out!_

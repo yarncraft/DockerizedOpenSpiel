@@ -1,10 +1,9 @@
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 RUN apt update
 RUN dpkg --add-architecture i386 && apt update
 RUN apt-get -y install \
     clang \
     curl \
-    cmake \
     git \
     python3 \
     python3-dev \
@@ -12,14 +11,29 @@ RUN apt-get -y install \
     python3-setuptools \
     python3-wheel \
     sudo
+
+RUN sudo pip3 install --upgrade pip
+RUN sudo pip3 install matplotlib
+
+# clone repository and install
 RUN git clone -b 'master' --single-branch --depth 15 https://github.com/deepmind/open_spiel.git open_spiel
 WORKDIR open_spiel
 RUN ./install.sh
+
+RUN pip3 install --upgrade setuptools testresources 
+RUN pip3 install --upgrade -r requirements.txt
+RUN pip3 install --upgrade cmake
+
+# build and test
 RUN mkdir -p build && \
     cd build && \
     cmake -DPython_TARGET_VERSION=${PYVERSION} -DCMAKE_CXX_COMPILER=`which clang++` ../open_spiel && \
-    make -j4
-RUN pip3 install absl-py scipy
+    make -j4 && \
+    ctest -j4
 COPY . build
-WORKDIR /open_spiel/build
-CMD run.sh
+
+ENV PYTHONPATH=${PYTHONPATH}:/open_spiel/
+ENV PYTHONPATH=${PYTHONPATH}:/open_spiel/build/python
+
+#RUN python3 ./open_spiel/python/examples/matrix_game_example.py
+WORKDIR ./open_spiel

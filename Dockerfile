@@ -1,34 +1,25 @@
-FROM ubuntu:18.04
-
-# Install Python, Git, Pip
-RUN apt-get update && apt-get -y install sudo && apt-get -y install git
-RUN sudo apt-get -y install python3-dev python3-pip
-RUN sudo pip3 install -U virtualenv
-RUN sudo pip3 install --upgrade pip
-RUN sudo pip3 install matplotlib
-
-WORKDIR /
-RUN mkdir openspiel
-COPY open_spiel/ /openspiel
-WORKDIR openspiel
-
-# Execute installation script
-RUN chmod +x install.sh
-RUN sed -i -e 's/apt-get install/apt-get install -y/g' ./install.sh
+FROM ubuntu:20.04
+RUN apt update
+RUN dpkg --add-architecture i386 && apt update
+RUN apt-get -y install \
+    clang \
+    curl \
+    cmake \
+    git \
+    python3 \
+    python3-dev \
+    python3-pip \
+    python3-setuptools \
+    python3-wheel \
+    sudo
+RUN git clone -b 'master' --single-branch --depth 15 https://github.com/deepmind/open_spiel.git open_spiel
+WORKDIR open_spiel
 RUN ./install.sh
-
-# Create Virtual Environment
-RUN virtualenv -p python3 venv
-RUN /bin/bash -c "source venv/bin/activate"
-
-# Version Checks
-RUN python3 --version
-RUN pip3 --version
-RUN virtualenv --version
-
-# Installing Python Dependencies
-RUN pip3 install --no-cache -r requirements.txt
-RUN pip3 install --no-cache cmake
-
-# Run tests
-RUN ./open_spiel/scripts/build_and_run_tests.sh
+RUN mkdir -p build && \
+    cd build && \
+    cmake -DPython_TARGET_VERSION=${PYVERSION} -DCMAKE_CXX_COMPILER=`which clang++` ../open_spiel && \
+    make -j4
+RUN pip3 install absl-py scipy
+COPY . build
+WORKDIR /open_spiel/build
+CMD run.sh

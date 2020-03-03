@@ -41,3 +41,6 @@ cd DockerizedOpenSpiel
 docker build -t openspiel .
 docker run openspiel examples/example --game=tic_tac_toe
 ```
+
+## Acknowledgements
+Special thanks to Edward Lockhart https://github.com/elkhrt for helping out!

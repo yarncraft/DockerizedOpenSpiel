@@ -24,12 +24,12 @@ RUN pip3 install --upgrade setuptools testresources
 RUN pip3 install --upgrade -r requirements.txt
 RUN pip3 install --upgrade cmake
 
-# build and test
+# build (and test)
 RUN mkdir -p build && \
     cd build && \
     cmake -DPython_TARGET_VERSION=${PYVERSION} -DCMAKE_CXX_COMPILER=`which clang++` ../open_spiel && \
-    make -j4 && \
-    ctest -j4
+    make -j4
+    #ctest -j4 # add this in order to run the tests, takes a long time and a single fail will cancel the build
 COPY . build
 
 ENV PYTHONPATH=${PYTHONPATH}:/open_spiel/
